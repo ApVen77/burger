@@ -4,17 +4,19 @@ var router= express.Router();
 var burger = require("../models/burger")
 
 router.get("/", function(req, res){
-
+	burger.selectAll(function(data){
+		var burgers
+	}
     res.redirect("/burgers")
 
 }); 
-router.get("/burgers", function(req, res){
+router.post("/burgers", function(req, res){
     burger.selectAll(function(burgerData){
         res.render("index", {burgers: burgerData});
     })
 })
 
-router.post("/burgers/create", function(req,res){
+router.put("/burgers/create", function(req,res){
     console.log("inside create route")
 	burgers.insertOne([
 		"burger_name"
