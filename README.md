@@ -12,5 +12,8 @@ See here:
 
 ### Getiing Started
 
-run locally | to install
-------------------------
+**to install**  | **run locally**  
+----------------| ----------------
+git clone git@github.com/friend-finder/no-new-friends.git | export PORT = 8080   node.server.js
+cd friend-finder                                          | server.js
+npm install   

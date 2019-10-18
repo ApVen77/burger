@@ -1,38 +1,26 @@
 var express = require("express");
-var exphbs = require("express-handlebars");
-var mysql = require("mysql");
+
+var PORT = process.env.PORT || 8080;
 
 var app = express();
 
-// Set the port of our application
-// process.env.PORT lets the port be set by Heroku
-var PORT = process.env.PORT || 8080;
+// Serve static content for the app from the "public" directory in the application directory.
+app.use(express.static("public"));
 
-// Parse request body as JSON
+// Parse application body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Set Handlebars.
+var exphbs = require("express-handlebars");
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-var connection = mysql.createConnection({
-  host: "localhost",
-  port: 3307,
-  user: "root",
-  password: "root",
-  database: "burgers_db"
-});
+// Import routes and give the server access to them.
+var routes = require("./controller/burgers_controllers");
 
-connection.connect(function(err) {
-  if (err) {
-    console.error("error connecting: " + err.stack);
-    return;
-  }
-
-  console.log("connected as id " + connection.threadId);
-});
-
-
+app.use(routes);
 
 // Start our server so that it can begin listening to client requests.
 app.listen(PORT, function() {

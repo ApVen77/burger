@@ -1,22 +1,45 @@
-var orm = require("../config/orm.js");
-var burgers = {
-	selectAll: function(cb){
-		orm.selectAll("burgers", function(res){
-			cb(res);
-		});
-	},
+(function() {
+  $(".change-devoured").on("click", function(event) {
+    var id = $(this).data("id");
+    var newDevoured = $(this).data("newdevoured");
 
-	insertOne: function(cols,vals,cb){
-		orm.insertOne("burgers", cols, vals, function(res){
-			cb(res);
-		});
-	},
+    var newDevouredState = {
+      devoured: newDevoured
+    };
+console.log(newDevouredState);
+    // Send the PUT request.
+    $.ajax("/api/burgers/" + id, {
+      type: "PUT",
+      data: newDevouredState
+    }).then(
+      function() {
+        console.log("changed devoured", newDevoured);
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
 
-	updateOne: function(objColVals, condition, cb){
-		orm.updateOne("burgers", objColVals, condition, function(res){
-			cb(res);
-		});
-	},
-};
+  $(".create-form").on("submit", function(event) {
+    // Make sure to preventDefault on a submit event.
+    event.preventDefault();
 
-module.exports = burgers;
+    var newBurger = {
+      burger_name: $("#burg").val().trim(),
+      devoured: $("[name=devoured]:checked").val().trim()
+    };
+
+    // Send the POST request.
+    $.ajax("/api/burgers", {
+      type: "POST",
+      data: newBurger
+    }).then(
+      function() {
+        console.log("created new Burger");
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
+});
+
